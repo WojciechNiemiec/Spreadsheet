@@ -1,0 +1,6 @@
+.project
+.classpath
+*.txt
+.settings
+bin/
+help.html
