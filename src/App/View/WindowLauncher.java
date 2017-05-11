@@ -1,7 +1,7 @@
-package App;
+package App.View;
 
 public class WindowLauncher {
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		new Window();
 	}
 }

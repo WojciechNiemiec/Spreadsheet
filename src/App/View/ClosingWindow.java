@@ -1,4 +1,4 @@
-package App;
+package App.View;
 
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,8 @@
-package App;
+package App.View;
+
+import App.Controller.*;
+import App.Model.*;
+
 
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -10,7 +14,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.DoubleSummaryStatistics;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,12 +23,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
+import org.freixas.jcalendar.JCalendarCombo;
+
+import com.l2fprod.common.swing.JTaskPane;
 
 public class FrontPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -37,14 +43,41 @@ public class FrontPanel extends JPanel {
 	private JTextArea resultArea;
 	private JSpinner spinnerX;
 	private JSpinner spinnerY;
-	private JTable table;
+	private DoubleTable table;
+	private DoubleTableModel tableModel;
 	private JButton clearButton;
 	private JButton addButton;
 	private JButton saveButton;
 	private JButton randButton;
 	private JLabel statusLabel;
 	private JComboBox<String> comboBox;
-
+	
+	private JTaskPane taskPane;
+	private JCalendarCombo calendar;
+	
+	public void initCalendar() {
+		calendar = new JCalendarCombo();
+		calendar.getModel().addListDataListener(new ListDataListener() {
+			
+			@Override
+			public void intervalRemoved(ListDataEvent e) {}
+			
+			@Override
+			public void intervalAdded(ListDataEvent e) {}
+			
+			@Override
+			public void contentsChanged(ListDataEvent e) {
+				Object selected = calendar.getModel().getSelectedItem();
+				resultArea.setText(selected.toString());
+			}
+		});
+	}
+	
+	private void initTaskPane() {
+		taskPane = new JTaskPane();
+		taskPane.setVisible(true);
+	}
+	
 	private void initSpinners() {
 		Integer[] numbers = {1, 2, 3, 4, 5};
 		spinnerX = new JSpinner(new SpinnerListModel(numbers));
@@ -52,25 +85,25 @@ public class FrontPanel extends JPanel {
 	}
 
 	private void initComboBox() {
-		comboBox = new JComboBox<>();
-		comboBox.addItem("Amount");
-		comboBox.addItem("Average");
-		comboBox.addItem("Min Max");
-		comboBox.addActionListener(e->updateResultArea());
+		String[] data = {"Amount", "Average", "Min", "Max"};
+		ComboModel model = new ComboModel(data);
+		ComboController controller = new ComboController(()->updateResultArea());
+		model.addListDataListener(controller);
+		comboBox = new JComboBox<>(model);
 	}
 	
 	public void updateResultArea() {
 		String selector = (String)comboBox.getSelectedItem();
-		DoubleSummaryStatistics numbers = getSummaryStatistics();
 		String text;
 		
 		if (selector.equals("Amount")) {
-			text = "Amount is: " + numbers.getSum();
+			text = "Amount is: " + tableModel.amount();
 		} else if (selector.equals("Average")) {
-			text = "Average is: " + numbers.getAverage();
-		} else if (selector.equals("Min Max")) {
-			text = "Min is: " + numbers.getMin()
-					+ "\nMax is: " + numbers.getMax();
+			text = "Average is: " + tableModel.average();
+		} else if (selector.equals("Min")) {
+			text = "Min is: " + tableModel.min();
+		} else if (selector.equals("Max")) {
+			text = "Max is: " + tableModel.max();
 		} else {
 			text = "";
 		}
@@ -81,39 +114,21 @@ public class FrontPanel extends JPanel {
 	public JTextArea getResultArea() {
 		return resultArea;
 	}
-
-	public DoubleSummaryStatistics getSummaryStatistics() {
-		return ((MyTableModel)table.getModel())
-				.getData()
-				.stream()
-				.filter(p -> p != null)
-				.mapToDouble(Double::doubleValue)
-				.summaryStatistics();
-	}
 	
 	private void initTable() {
 		String[] names = {"Column 1", "Column 2", "Column 3", "Column 4", "Column 5"};
 		Double[][] data = new Double[5][5];
-		TableModel model = new MyTableModel(data, names);
-		table = new JTable(model);
+		tableModel = new DoubleTableModel(names, data);
+		table = new DoubleTable(tableModel);
 		table.setFillsViewportHeight(true);
-		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-		for (int i = 0; i < names.length; i++) {
-			table.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
-		}
+	}
+	
+	public DoubleTableModel getTableModel() {
+		return tableModel;
 	}
 
 	public interface VariableSetter<T>{
 		T execute();
-	}
-	
-	public void setForEachCell(VariableSetter<Double> v) {
-		for (int y = 0; y < table.getModel().getRowCount(); y++) {
-			for (int x = 0; x < table.getModel().getColumnCount(); x++) {
-				table.getModel().setValueAt(v.execute(), y, x);
-			}
-		}
 	}
 	
 	private void initClearButton() {
@@ -121,7 +136,7 @@ public class FrontPanel extends JPanel {
 		clearButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setForEachCell(()->Double.valueOf(0));
+				getTableModel().reset();
 				updateResultArea();
 				statusLabel.setText("Table is clear");
 			}
@@ -133,7 +148,7 @@ public class FrontPanel extends JPanel {
 		randButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setForEachCell(()->Math.floor(Math.random() * 1000) / 10);
+				getTableModel().random();
 				updateResultArea();
 				statusLabel.setText("Table filled with random numbers");
 			}
@@ -177,8 +192,6 @@ public class FrontPanel extends JPanel {
 		try {
 			String fileName = "file.txt";
 			JFileChooser chooser = new JFileChooser();
-		    //FileNameExtensionFilter filter = new FileNameExtensionFilter("txt");
-		    //chooser.setFileFilter(filter);
 		    int returnVal = chooser.showSaveDialog(FrontPanel.this);
 		    if(returnVal == JFileChooser.SAVE_DIALOG) {
 		            fileName = chooser.getSelectedFile().getName();
@@ -194,7 +207,6 @@ public class FrontPanel extends JPanel {
 			ex.printStackTrace();
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
-			//ex.printStackTrace();
 		}
 	}
 	
@@ -203,7 +215,7 @@ public class FrontPanel extends JPanel {
 	}
 
 	public FrontPanel() {
-		super.setSize(new Dimension(565, 320));
+		super.setSize(new Dimension(750, 290));
 		super.setLayout(null);
 		super.setBackground(new Color(210, 210, 220));
 		initTable();
@@ -213,6 +225,14 @@ public class FrontPanel extends JPanel {
 		initAddButton();
 		initSaveButton();
 		initRandButton();
+		initTaskPane();
+		initCalendar();
+		
+		calendar.setBounds(new Rectangle(560, 30, 170, 30));
+		super.add(calendar);
+		
+		taskPane.setBounds(new Rectangle(560, 80, 170, 130));
+		super.add(taskPane);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(new Rectangle(10, 60, 400, 103));
@@ -222,7 +242,7 @@ public class FrontPanel extends JPanel {
 		label.setBounds(new Rectangle(10, 15, 150, LabelHeight));
 		super.add(label);
 		
-		setForEachCell(()->Double.valueOf(0));
+		getTableModel().reset();
 		inputField = new JTextField();
 		inputField.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		inputField.setBounds(10, 30, 150, 20);

@@ -1,9 +1,8 @@
-package App;
+package App.View;
 
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.DoubleSummaryStatistics;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,6 +16,8 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
+import com.l2fprod.common.swing.JTipOfTheDay;
+
 public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
@@ -28,6 +29,12 @@ public class Window extends JFrame {
 	private JPanel statusBar;
 	private JLabel statusLabel;
 	private FrontPanel panelHandler;
+	private JTipOfTheDay tip;
+	
+	private void initTip() {
+		tip = new JTipOfTheDay();
+		tip.setVisible(true);
+	}
 	
 	private void initMenu() {
 		menuBar = new JMenuBar();
@@ -101,30 +108,31 @@ public class Window extends JFrame {
 	}
 	
 	public void clearTable() {
-		panelHandler.setForEachCell(()->null);
+		panelHandler.getTableModel().reset();
 		panelHandler.updateResultArea();
 		statusLabel.setText("Table cleared");
 	}
 
 	public void randomTable() {
-		panelHandler.setForEachCell(()->Math.floor(Math.random() * 1000) / 10);
+		panelHandler.getTableModel().random();
 		panelHandler.updateResultArea();
 		statusLabel.setText("Table filled with random numbers");
 	}
 
 	public void findAverage() {
-		panelHandler.getResultArea().setText("Average is: " + panelHandler.getSummaryStatistics().getAverage());
+		panelHandler.getResultArea().setText("Average is: " + panelHandler.getTableModel().average());
 		statusLabel.setText("Average found");
 	}
 
 	public void findAmount() {
-		panelHandler.getResultArea().setText("Amount is: " + panelHandler.getSummaryStatistics().getSum());
+		panelHandler.getResultArea().setText("Amount is: " + panelHandler.getTableModel().amount());
 		statusLabel.setText("Total amount found");
 	}
 
 	public void findMinMax() {
-		DoubleSummaryStatistics stats = panelHandler.getSummaryStatistics();
-		panelHandler.getResultArea().setText("Min is: " + stats.getMin() + ", max is: " + stats.getMax());
+		Double min = panelHandler.getTableModel().min();
+		Double max = panelHandler.getTableModel().max();
+		panelHandler.getResultArea().setText("Min is: " + min + ", max is: " + max);
 		statusLabel.setText("Min and max found");
 	}
 
@@ -164,7 +172,7 @@ public class Window extends JFrame {
 		
 		button = new JButton(new ImageIcon("src/Icons/clear.png"));
 		button.addActionListener(e->{
-			panelHandler.setForEachCell(()->Double.valueOf(0));
+			panelHandler.getTableModel().reset();
 			panelHandler.updateResultArea();
 		});
 		toolBar.add(button);
@@ -214,6 +222,7 @@ public class Window extends JFrame {
 		initMenu();
 		initStatusBar();
 		initToolBar();
+		initTip();
 		setCustomCloseOperation();
 		
 		panelHandler = new FrontPanel();
@@ -221,6 +230,7 @@ public class Window extends JFrame {
 		
 		super.setLayout(new BorderLayout());
 		super.setJMenuBar(menuBar);
+		super.add(tip);
 		super.add(statusBar, BorderLayout.SOUTH);
 		super.add(toolBar, BorderLayout.PAGE_START);
 		super.getContentPane().add(panelHandler);

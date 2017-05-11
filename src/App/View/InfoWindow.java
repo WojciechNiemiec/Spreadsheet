@@ -1,4 +1,4 @@
-package App;
+package App.View;
 
 import java.awt.Dimension;
 import java.awt.Point;
