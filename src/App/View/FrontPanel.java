@@ -32,9 +32,6 @@ import javax.swing.event.ListDataListener;
 import org.apache.log4j.Logger;
 import org.freixas.jcalendar.JCalendarCombo;
 
-import com.l2fprod.common.swing.JTaskPane;
-import com.l2fprod.common.swing.JTaskPaneGroup;
-
 /**
  * This class defines the panel in the middle of an application witch
  * contains majority of the application content.
@@ -78,7 +75,6 @@ public class FrontPanel extends JPanel {
 	private JLabel statusLabel;
 	private JComboBox<String> comboBox;
 	
-	private JTaskPane taskPane;
 	private JCalendarCombo calendar;
 	
 	/**
@@ -103,26 +99,6 @@ public class FrontPanel extends JPanel {
 		});
 		
 		log.info("Calendar initialized");
-	}
-	
-	/**
-	 * Initializes the JTaskPane component.
-	 */
-	private void initTaskPane() {
-		JButton button;
-		JTaskPaneGroup group;
-		taskPane = new JTaskPane();
-		
-		group = new JTaskPaneGroup();
-		group.setTitle("Operations");
-		
-		button = new JButton("Clear");
-		button.addActionListener(e -> table.getTableModel().reset());
-		group.add(button);
-		taskPane.add(group);
-		taskPane.setVisible(true);
-		
-		log.info("Task pane initialized");
 	}
 	
 	/**
@@ -326,7 +302,7 @@ public class FrontPanel extends JPanel {
 	 * Runs all ini methods and creates a new instance of FrontPanel.
 	 */
 	public FrontPanel() {
-		super.setSize(new Dimension(750, 290));
+		super.setSize(new Dimension(690, 320));
 		super.setLayout(null);
 		super.setBackground(new Color(210, 210, 220));
 		initTable();
@@ -336,14 +312,7 @@ public class FrontPanel extends JPanel {
 		initAddButton();
 		initSaveButton();
 		initRandButton();
-		initTaskPane();
 		initCalendar();
-		
-		calendar.setBounds(new Rectangle(560, 30, 170, 30));
-		super.add(calendar);
-		
-		taskPane.setBounds(new Rectangle(560, 80, 170, 130));
-		super.add(taskPane);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(new Rectangle(10, 60, 400, 103));
@@ -380,6 +349,8 @@ public class FrontPanel extends JPanel {
 		super.add(label);
 		comboBox.setBounds(new Rectangle(10, 180, 150, 30));
 		super.add(comboBox);
+		calendar.setBounds(new Rectangle(10, 220, 170, 30));
+		super.add(calendar);
 		
 		addButton.setBounds(440, 30, buttonWidth, buttonHeight);
 		super.add(addButton);

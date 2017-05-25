@@ -18,6 +18,8 @@ import javax.swing.border.BevelBorder;
 
 import org.apache.log4j.Logger;
 
+import com.l2fprod.common.swing.JTaskPane;
+import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.JTipOfTheDay;
 import com.l2fprod.common.swing.tips.DefaultTipModel;
 
@@ -51,6 +53,7 @@ public class Window extends JFrame {
 	private FrontPanel panelHandler;
 	private JTipOfTheDay tip;
 	
+	private JTaskPane taskPane;
 	
 	/**
 	 * Shows the JTipOfTheDay dialog.
@@ -66,6 +69,48 @@ public class Window extends JFrame {
 		log.info("constructing Tip");
 	}
 	
+	/**
+	 * Initializes the JTaskPane component.
+	 */
+	private void initTaskPane() {
+		JButton button;
+		JTaskPaneGroup group;
+		taskPane = new JTaskPane();
+		
+		group = new JTaskPaneGroup();
+		group.setTitle("Data setting");
+		
+		button = new JButton("Clear");
+		button.addActionListener(e -> clearTable());
+		group.add(button);
+		
+		button = new JButton("Random");
+		button.addActionListener(e -> randomTable());
+		group.add(button);
+		
+		taskPane.add(group);
+		
+		group = new JTaskPaneGroup();
+		group.setTitle("Counting");
+		
+		button = new JButton("Amount");
+		button.addActionListener(e -> findAmount());
+		group.add(button);
+		
+		button = new JButton("Average");
+		button.addActionListener(e -> findAverage());
+		group.add(button);
+		
+		button = new JButton("Min Max");
+		button.addActionListener(e -> findMinMax());
+		group.add(button);
+		
+		taskPane.add(group);
+		
+		taskPane.setVisible(true);
+		
+		log.info("Task pane initialized");
+	}
 	
 	/**
 	 * Ininitializes the menu.
@@ -335,12 +380,14 @@ public class Window extends JFrame {
 		initStatusBar();
 		initToolBar();
 		setCustomCloseOperation();
+		initTaskPane();
 		
 		panelHandler = new FrontPanel();
 		panelHandler.setStatusLabel(statusLabel);
 		
 		super.setLayout(new BorderLayout());
 		super.setJMenuBar(menuBar);
+		super.add(taskPane, BorderLayout.WEST);
 		super.add(statusBar, BorderLayout.SOUTH);
 		super.add(toolBar, BorderLayout.PAGE_START);
 		super.getContentPane().add(panelHandler);
