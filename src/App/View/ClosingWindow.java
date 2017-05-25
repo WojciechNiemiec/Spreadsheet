@@ -8,12 +8,27 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * This class defines the closing Window witch asks a client if he is shure he wants to close.
+ * The calling window becoms disabled while this Window is presenting.
+ * @author Wojciech Niemiec
+ * @version 1.0.0
+ * Date: 2017.05.10
+ *
+ */
 public class ClosingWindow extends JFrame {
 
+	/**
+	 * A version from serializable.
+	 */
 	private static final long serialVersionUID = 1L;
 
 	JFrame windowHandler;
 	
+	/**
+	 * Defines the content of window with the closing question and appropirate buttons.
+	 * @param windowHandler - a handle to JFrame
+	 */
 	public ClosingWindow(JFrame windowHandler) {
 		super.frameInit();
 		super.setLayout(null);
@@ -53,7 +68,11 @@ public class ClosingWindow extends JFrame {
 		super.setResizable(false);
 		setVisible(true);
 	}
-	
+
+	/**
+	 * Sets handle to a JFrame and sets position relatively to the center of specified JFrame
+	 * @param windowHandler - a JFrame used for positioning
+	 */
 	private void setWindowHandler(JFrame windowHandler) {
 		setLocationRelativeTo(windowHandler);
 		this.windowHandler = windowHandler;

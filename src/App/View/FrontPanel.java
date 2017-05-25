@@ -32,11 +32,32 @@ import javax.swing.event.ListDataListener;
 import org.freixas.jcalendar.JCalendarCombo;
 
 import com.l2fprod.common.swing.JTaskPane;
+import com.l2fprod.common.swing.JTaskPaneGroup;
 
+/**
+ * This class defines the panel in the middle of an application witch
+ * contains majority of the application content.
+ * @author Wojciech Niemiec
+ * @version 1.0.0
+ * Date: 2017.05.10
+ *
+ */
 public class FrontPanel extends JPanel {
+	/**
+	 * Version from serializable.
+	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Default height for a label.
+	 */
 	private static final int LabelHeight = 15;
+	/**
+	 * Default height for a button.
+	 */
 	private static final int buttonHeight = 30;
+	/**
+	 * Default width for a button.
+	 */
 	private static final int buttonWidth = 100;
 	
 	private JTextField inputField;
@@ -55,6 +76,10 @@ public class FrontPanel extends JPanel {
 	private JTaskPane taskPane;
 	private JCalendarCombo calendar;
 	
+	/**
+	 * Initializes the JCalendarCombo component and defines actions
+	 * for it.
+	 */
 	public void initCalendar() {
 		calendar = new JCalendarCombo();
 		calendar.getModel().addListDataListener(new ListDataListener() {
@@ -73,17 +98,36 @@ public class FrontPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Initializes the JTaskPane component.
+	 */
 	private void initTaskPane() {
+		JButton button;
+		JTaskPaneGroup group;
 		taskPane = new JTaskPane();
+		
+		group = new JTaskPaneGroup();
+		group.setTitle("Operations");
+		
+		button = new JButton("Clear");
+		button.addActionListener(e -> table.getTableModel().reset());
+		group.add(button);
+		taskPane.add(group);
 		taskPane.setVisible(true);
 	}
 	
+	/**
+	 * Initializes the spinner.
+	 */
 	private void initSpinners() {
 		Integer[] numbers = {1, 2, 3, 4, 5};
 		spinnerX = new JSpinner(new SpinnerListModel(numbers));
 		spinnerY = new JSpinner(new SpinnerListModel(numbers));
 	}
 
+	/**
+	 * Initializes the combo box.
+	 */
 	private void initComboBox() {
 		String[] data = {"Amount", "Average", "Min", "Max"};
 		ComboModel model = new ComboModel(data);
@@ -92,6 +136,9 @@ public class FrontPanel extends JPanel {
 		comboBox = new JComboBox<>(model);
 	}
 	
+	/**
+	 * Defines the data to present on result area depending on selected option
+	 */
 	public void updateResultArea() {
 		String selector = (String)comboBox.getSelectedItem();
 		String text;
@@ -111,10 +158,17 @@ public class FrontPanel extends JPanel {
 		resultArea.setText(text);
 	}
 
+	/**
+	 * Returns a handle to Result area.
+	 * @return a handle to Result area
+	 */
 	public JTextArea getResultArea() {
 		return resultArea;
 	}
 	
+	/**
+	 * Initializes the table component with DoubleTableModel and five columns.
+	 */
 	private void initTable() {
 		String[] names = {"Column 1", "Column 2", "Column 3", "Column 4", "Column 5"};
 		Double[][] data = new Double[5][5];
@@ -123,14 +177,17 @@ public class FrontPanel extends JPanel {
 		table.setFillsViewportHeight(true);
 	}
 	
+	/**
+	 * Returns a table model to get access to data and data manipulation methods
+	 * @return a handle to tableModel
+	 */
 	public DoubleTableModel getTableModel() {
 		return tableModel;
 	}
 
-	public interface VariableSetter<T>{
-		T execute();
-	}
-	
+	/**
+	 * Initializes the clear button with its action.
+	 */
 	private void initClearButton() {
 		clearButton = new JButton("Clear");
 		clearButton.addActionListener(new ActionListener() {
@@ -143,6 +200,9 @@ public class FrontPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Initializes the rundom button with its action.
+	 */
 	private void initRandButton() {
 		randButton = new JButton("Random");
 		randButton.addActionListener(new ActionListener() {
@@ -155,6 +215,9 @@ public class FrontPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Initializes the add button with its action.
+	 */
 	private void initAddButton() {
 		addButton = new JButton("Add");
 		addButton.addActionListener(new ActionListener() {
@@ -177,6 +240,9 @@ public class FrontPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Initializes the save button with its action: saving the data.
+	 */
 	private void initSaveButton() {
 		saveButton = new JButton("Save");
 		saveButton.addActionListener(new ActionListener() {
@@ -188,6 +254,9 @@ public class FrontPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Runs the table saving process.
+	 */
 	public void saveToFile() {
 		try {
 			String fileName = "file.txt";
@@ -210,10 +279,17 @@ public class FrontPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Sets the status label.
+	 * @param statusLabel
+	 */
 	public void setStatusLabel(JLabel statusLabel) {
 		this.statusLabel = statusLabel;
 	}
 
+	/**
+	 * Runs all ini methods and creates a new instance of FrontPanel.
+	 */
 	public FrontPanel() {
 		super.setSize(new Dimension(750, 290));
 		super.setLayout(null);

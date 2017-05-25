@@ -9,9 +9,22 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+/**
+ * This class is responsible for presenting information about author.
+ * @author Wojciech Niemiec
+ * @version 1.0.0
+ * Date: 2017.05.10
+ *
+ */
 public class InfoWindow extends JDialog {
+	/*
+	 * A version from serializable.
+	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Constructor
+	 */
 	public InfoWindow() {
 		super.dialogInit();
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

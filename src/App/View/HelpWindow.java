@@ -6,9 +6,22 @@ import java.awt.Dimension;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+/**
+ * This class is responsible for presenting help message dialog.
+ * @author Wojciech Niemiec
+ * @version 1.0.0
+ * Date: 2017.05.10
+ *
+ */
 public class HelpWindow extends JDialog {
+	/**
+	 * A version from serializable.
+	 */
 	private static final long serialVersionUID = 1L;
 	
+	/*
+	 * Creates window with simple how to use information.
+	 */
 	public HelpWindow() {
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		super.setSize(new Dimension(400, 600));
