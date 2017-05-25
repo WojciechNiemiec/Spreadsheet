@@ -7,6 +7,10 @@ import java.util.stream.DoubleStream;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.log4j.Logger;
+
+import App.View.InfoWindow;
+
 /**
  * Custom TableModel class optimalized for presenting and manipulating Double values. This class
  * defines counting and filling table methods.
@@ -21,6 +25,11 @@ public class DoubleTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(DoubleTableModel.class);
+	
 	String[] names;
 	List<List<Double>> data;
 
@@ -39,6 +48,8 @@ public class DoubleTableModel extends AbstractTableModel {
 				this.data.get(i).add((data[i][j] != null) ? data[i][j] : 0.0);
 			}
 		}
+		
+		log.info("Table model created");
 	}
 
 	/**
@@ -46,6 +57,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * @return average
 	 */
 	public Double average() {
+		log.info("Average counting");
 		return getDataStream().average().getAsDouble();
 	}
 
@@ -54,6 +66,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * @return amount
 	 */
 	public Double amount() {
+		log.info("Amount counting");
 		return getDataStream().sum();
 	}
 
@@ -62,6 +75,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * @return minimal value
 	 */
 	public Double min() {
+		log.info("Finding min");
 		return getDataStream().min().getAsDouble();
 	}
 
@@ -70,6 +84,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * @return maximal value
 	 */
 	public Double max() {
+		log.info("Finding max");
 		return getDataStream().max().getAsDouble();
 	}
 
@@ -77,6 +92,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * Fills table with zeros.
 	 */
 	public void reset() {
+		log.info("Reseting table");
 		fillWith(() -> Double.valueOf(0));
 	}
 
@@ -84,6 +100,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * Fills table with random numbers.
 	 */
 	public void random() {
+		log.info("Randoming table");
 		fillWith(() -> Math.floor(Math.random() * 10000) / 100);
 	}
 	
@@ -93,6 +110,8 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * use lambda expressions.
 	 */
 	private void fillWith(Supplier<Double> supplier) {
+		log.info("Method: fill with");
+		
 		for (int y = 0; y < data.size(); y++) {
 			for (int x = 0; x < data.get(y).size(); x++) {
 				data.get(y).set(x, supplier.get());
@@ -107,6 +126,8 @@ public class DoubleTableModel extends AbstractTableModel {
 	 * @return 1D double data stream
 	 */
 	private DoubleStream getDataStream() {
+		log.info("Returning stream");
+		
 		return data.stream()
 				.flatMap(e-> e.stream())
 				.filter(e -> e != null)
@@ -119,6 +140,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getColumnCount() {
+		log.info("Getting column count");
 		return names.length;
 	}
 
@@ -128,6 +150,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getRowCount() {
+		log.info("Getting row count");
 		return data.size();
 	}
 
@@ -140,6 +163,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		log.info("Returning value from row: " + rowIndex + " and column: " + columnIndex);
 		Double retval = data.get(rowIndex).get(columnIndex);
 		return (retval != 0.0) ? retval : "0";
 	}
@@ -152,6 +176,7 @@ public class DoubleTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		log.info("Setting value at row: " + rowIndex + " and column: " + columnIndex);
 		data.get(rowIndex).set(columnIndex, Double.parseDouble(aValue.toString()));
 		fireTableDataChanged();
 	}

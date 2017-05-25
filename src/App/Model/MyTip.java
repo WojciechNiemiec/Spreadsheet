@@ -16,8 +16,8 @@ public class MyTip implements Tip {
 	
 	/**
 	 * Creates a new Tip with specified values
-	 * @param tipName
-	 * @param tip
+	 * @param tipName - name of a tip
+	 * @param tip - tip content
 	 */
 	public MyTip(String tipName, String tip) {
 		this.tipName = tipName;

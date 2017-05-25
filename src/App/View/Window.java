@@ -16,6 +16,8 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
+import org.apache.log4j.Logger;
+
 import com.l2fprod.common.swing.JTipOfTheDay;
 import com.l2fprod.common.swing.tips.DefaultTipModel;
 
@@ -33,6 +35,11 @@ public class Window extends JFrame {
 	 * A version.
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(Window.class);
 	
 	private JMenu fileMenu;
 	private JMenu optionsMenu;
@@ -55,6 +62,8 @@ public class Window extends JFrame {
 		tip = new JTipOfTheDay(model);
 		tip.setVisible(true);
 		tip.showDialog(Window.this);
+		
+		log.info("constructing Tip");
 	}
 	
 	
@@ -71,6 +80,8 @@ public class Window extends JFrame {
 		menuBar.add(fileMenu);
 		menuBar.add(optionsMenu);
 		menuBar.add(helpMenu);
+		
+		log.info("constructing menu");
 	}
 
 	/**
@@ -97,6 +108,8 @@ public class Window extends JFrame {
 			panelHandler.saveToFile();
 		});
 		fileMenu.add(item);
+		
+		log.info("initializing file menu");
 	}
 
 	/**
@@ -123,6 +136,8 @@ public class Window extends JFrame {
 			findAverage();
 		});
 		optionsMenu.add(item);
+		
+		log.info("initializing options menu");
 	}
 	
 	/**
@@ -144,6 +159,8 @@ public class Window extends JFrame {
 			showAuthorDialog();
 		});
 		helpMenu.add(item);
+		
+		log.info("initializing help menu");
 	}
 	
 	/**
@@ -153,6 +170,8 @@ public class Window extends JFrame {
 		panelHandler.getTableModel().reset();
 		panelHandler.updateResultArea();
 		statusLabel.setText("Table cleared");
+		
+		log.info("Table cleared");
 	}
 
 	/**
@@ -162,6 +181,8 @@ public class Window extends JFrame {
 		panelHandler.getTableModel().random();
 		panelHandler.updateResultArea();
 		statusLabel.setText("Table filled with random numbers");
+		
+		log.info("Table filled with randoms");
 	}
 
 	/**
@@ -170,6 +191,8 @@ public class Window extends JFrame {
 	public void findAverage() {
 		panelHandler.getResultArea().setText("Average is: " + panelHandler.getTableModel().average());
 		statusLabel.setText("Average found");
+		
+		log.info("Average found");
 	}
 
 	/**
@@ -178,6 +201,8 @@ public class Window extends JFrame {
 	public void findAmount() {
 		panelHandler.getResultArea().setText("Amount is: " + panelHandler.getTableModel().amount());
 		statusLabel.setText("Total amount found");
+		
+		log.info("Amount found");
 	}
 
 	/**
@@ -188,6 +213,8 @@ public class Window extends JFrame {
 		Double max = panelHandler.getTableModel().max();
 		panelHandler.getResultArea().setText("Min is: " + min + ", max is: " + max);
 		statusLabel.setText("Min and max found");
+		
+		log.info("Min max found");
 	}
 
 	/**
@@ -196,6 +223,8 @@ public class Window extends JFrame {
 	public void showHelpDialog() {
 		new HelpWindow().setLocationRelativeTo(Window.this);
 		statusLabel.setText("Help displayed");
+		
+		log.info("Dialog presented");
 	}
 
 	/**
@@ -204,6 +233,8 @@ public class Window extends JFrame {
 	public void showAuthorDialog() {
 		new InfoWindow().setLocationRelativeTo(Window.this);
 		statusLabel.setText("Information about author displayed");
+		
+		log.info("Author presented");
 	}
 	
 	/**
@@ -216,6 +247,8 @@ public class Window extends JFrame {
 		statusBar = new JPanel();
 		statusBar.add(statusLabel);
 		statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+		
+		log.info("initializing status bar");
 	}
 	
 	/**
@@ -275,6 +308,8 @@ public class Window extends JFrame {
 			showHelpDialog();
 		});
 		toolBar.add(button);
+		
+		log.info("Initializing toolbar");
 	}
 	
 	/**
@@ -288,6 +323,8 @@ public class Window extends JFrame {
 				new ClosingWindow(Window.this);
 			}
 		});
+		
+		log.info("Custom close operation setted");
 	}
 	
 	/**
@@ -319,5 +356,7 @@ public class Window extends JFrame {
 		}
 		
 		getTip();
+		
+		log.info("Window constructed");
 	}
 }

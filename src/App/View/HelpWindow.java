@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class is responsible for presenting help message dialog.
  * @author Wojciech Niemiec
@@ -19,10 +21,17 @@ public class HelpWindow extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(HelpWindow.class);
+	
 	/*
 	 * Creates window with simple how to use information.
 	 */
 	public HelpWindow() {
+		log.info("Help presented");
+		
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		super.setSize(new Dimension(400, 600));
 

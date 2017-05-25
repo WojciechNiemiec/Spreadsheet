@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class is responsible for presenting information about author.
  * @author Wojciech Niemiec
@@ -23,9 +25,16 @@ public class InfoWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
 	
 	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(InfoWindow.class);
+	
+	/**
 	 * Constructor
 	 */
 	public InfoWindow() {
+		log.info("Dialog presented");
+		
 		super.dialogInit();
 		super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		super.setSize(new Dimension(300, 250));

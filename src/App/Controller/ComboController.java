@@ -16,7 +16,7 @@ public class ComboController implements ListDataListener {
 	
 	/**
 	 * Sets function
-	 * @param function
+	 * @param function - a function to be executed
 	 */
 	public ComboController(Function function) {
 		this.function = function;
@@ -24,7 +24,7 @@ public class ComboController implements ListDataListener {
 	
 	/**
 	 * Runs the fucntion when contents changed
-	 * @param e
+	 * @param e - event
 	 */
 	@Override
 	public void contentsChanged(ListDataEvent e) {

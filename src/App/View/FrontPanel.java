@@ -29,6 +29,7 @@ import javax.swing.SpinnerListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import org.apache.log4j.Logger;
 import org.freixas.jcalendar.JCalendarCombo;
 
 import com.l2fprod.common.swing.JTaskPane;
@@ -47,6 +48,10 @@ public class FrontPanel extends JPanel {
 	 * Version from serializable.
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(FrontPanel.class);
 	/**
 	 * Default height for a label.
 	 */
@@ -96,6 +101,8 @@ public class FrontPanel extends JPanel {
 				resultArea.setText(selected.toString());
 			}
 		});
+		
+		log.info("Calendar initialized");
 	}
 	
 	/**
@@ -114,6 +121,8 @@ public class FrontPanel extends JPanel {
 		group.add(button);
 		taskPane.add(group);
 		taskPane.setVisible(true);
+		
+		log.info("Task pane initialized");
 	}
 	
 	/**
@@ -123,6 +132,8 @@ public class FrontPanel extends JPanel {
 		Integer[] numbers = {1, 2, 3, 4, 5};
 		spinnerX = new JSpinner(new SpinnerListModel(numbers));
 		spinnerY = new JSpinner(new SpinnerListModel(numbers));
+		
+		log.info("Spinners initialized");
 	}
 
 	/**
@@ -134,6 +145,8 @@ public class FrontPanel extends JPanel {
 		ComboController controller = new ComboController(()->updateResultArea());
 		model.addListDataListener(controller);
 		comboBox = new JComboBox<>(model);
+		
+		log.info("Combobox initialized");
 	}
 	
 	/**
@@ -156,6 +169,7 @@ public class FrontPanel extends JPanel {
 		}
 		
 		resultArea.setText(text);
+		log.info("Result area updated with: " + text);
 	}
 
 	/**
@@ -175,6 +189,8 @@ public class FrontPanel extends JPanel {
 		tableModel = new DoubleTableModel(names, data);
 		table = new DoubleTable(tableModel);
 		table.setFillsViewportHeight(true);
+		
+		log.info("table initialized");
 	}
 	
 	/**
@@ -182,6 +198,11 @@ public class FrontPanel extends JPanel {
 	 * @return a handle to tableModel
 	 */
 	public DoubleTableModel getTableModel() {
+		if (tableModel == null)
+			log.error("Uninitilized variable return");
+		else
+			log.info("table model returned");
+		
 		return tableModel;
 	}
 
@@ -198,6 +219,8 @@ public class FrontPanel extends JPanel {
 				statusLabel.setText("Table is clear");
 			}
 		});
+		
+		log.info("Clear button initialized");
 	}
 	
 	/**
@@ -231,13 +254,18 @@ public class FrontPanel extends JPanel {
 					table.getModel().setValueAt(value, x, y);
 					statusLabel.setText("Value " + value + " has been added to column: " + (x + 1)
 							+ ", row: " + (y + 1));
+					
+					log.info("Result area updated");
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(addButton, "Incorrect value");
+					log.error("Number format exception");
 				} finally {
 					updateResultArea();
 				}
 			}
 		});
+		
+		log.info("Add button initialized");
 	}
 
 	/**
@@ -252,6 +280,8 @@ public class FrontPanel extends JPanel {
 				statusLabel.setText("Data saved");
 			}
 		});
+		
+		log.info("Save button initialized");
 	}
 	
 	/**
@@ -272,19 +302,24 @@ public class FrontPanel extends JPanel {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			writer.write(table.getModel().toString());
 			writer.close();
+			
+			log.info("Saved to file");
 		} catch (IOException ex) {
 			ex.printStackTrace();
+			log.error("IOException");
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
+			log.error("Exception " + ex.getMessage());
 		}
 	}
 	
 	/**
 	 * Sets the status label.
-	 * @param statusLabel
+	 * @param statusLabel - label to be set
 	 */
 	public void setStatusLabel(JLabel statusLabel) {
 		this.statusLabel = statusLabel;
+		log.info("status label setted");
 	}
 
 	/**
@@ -356,5 +391,7 @@ public class FrontPanel extends JPanel {
 		super.add(saveButton);
 		
 		table.setVisible(true);
+		
+		log.info("Front panel setted");
 	}
 }

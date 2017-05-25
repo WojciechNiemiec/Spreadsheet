@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class defines the closing Window witch asks a client if he is shure he wants to close.
  * The calling window becoms disabled while this Window is presenting.
@@ -23,6 +25,11 @@ public class ClosingWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Logs the informations
+	 */
+	static Logger log = Logger.getLogger(ClosingWindow.class);
+	
 	JFrame windowHandler;
 	
 	/**
@@ -32,6 +39,8 @@ public class ClosingWindow extends JFrame {
 	public ClosingWindow(JFrame windowHandler) {
 		super.frameInit();
 		super.setLayout(null);
+		
+		log.info("Showing window");
 		
 		JLabel label = new JLabel();
 		JButton button;
@@ -45,6 +54,8 @@ public class ClosingWindow extends JFrame {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				log.info("Closing with success");
+				
 				System.exit(NORMAL);
 			}
 		});
@@ -54,6 +65,8 @@ public class ClosingWindow extends JFrame {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				log.info("Going back to application");
+				
 				ClosingWindow.this.setVisible(false);
 				windowHandler.setEnabled(true);
 				ClosingWindow.this.dispose();

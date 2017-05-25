@@ -20,7 +20,7 @@ public class WindowLauncher {
 	
 	/**
 	 * Runs the application
-	 * @param args
+	 * @param args - arguments from CLI
 	 */
 	public static void main(String[] args) {		
 		log.info("application start");
