@@ -305,38 +305,38 @@ public class Window extends JFrame {
 		toolBar = new JToolBar();
 		JButton button = null;
 		
-		button = new JButton(new ImageIcon("src/Icons/save.png"));
+		button = new JButton(new ImageIcon("resources/save.png"));
 		button.addActionListener(e -> {
 			panelHandler.saveToFile();
 		});
 		toolBar.add(button);
 		
-		button = new JButton(new ImageIcon("src/Icons/shuffle.png"));
+		button = new JButton(new ImageIcon("resources/shuffle.png"));
 		button.addActionListener(e->{
 			randomTable();
 		});
 		toolBar.add(button);
 		
-		button = new JButton(new ImageIcon("src/Icons/clear.png"));
+		button = new JButton(new ImageIcon("resources/clear.png"));
 		button.addActionListener(e->{
 			panelHandler.getTableModel().reset();
 			panelHandler.updateResultArea();
 		});
 		toolBar.add(button);
 		
-		button = new JButton(new ImageIcon("src/Icons/minmax.png"));
+		button = new JButton(new ImageIcon("resources/minmax.png"));
 		button.addActionListener(e -> {
 			findMinMax();
 		});
 		toolBar.add(button);
 		
-		button = new JButton(new ImageIcon("src/Icons/sum.png"));
+		button = new JButton(new ImageIcon("resources/sum.png"));
 		button.addActionListener(e -> {
 			findAmount();
 		});
 		toolBar.add(button);
 		
-		button = new JButton(new ImageIcon("src/Icons/average.png"));
+		button = new JButton(new ImageIcon("resources/average.png"));
 		button.addActionListener(e -> {
 			findAverage();
 		});

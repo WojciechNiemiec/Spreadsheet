@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<project name="GUI" basedir="." default="main">
+	
+	<!-- Zmienne -->
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="bin"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="dist/"/>
+    <property name="main-class"  value="App.View.WindowLauncher"/>
+	<property name="source.dir"     value="src"/>
+	<property name="doc.dir"     value="doc"/>
+	<property name="lib.dir"     value="lib"/>
+	<property name="resources.dir"     value="resources"/>
+
+	<!-- Sciezki do zasobow-->
+	    <path id="classpath">
+	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+	    	<fileset dir="${resources.dir}" includes="**/*.*"/>
+	    	 <pathelement location="bin"/>
+	    	<pathelement location="bin"/>
+	    	        <pathelement location="lib/log4j-1.2.17.jar"/>
+	    	        <pathelement location="lib/jcalendar.jar"/>
+	    	        <pathelement location="lib/l2fprod-common-tasks.jar"/>
+	    	        <pathelement location="lib/l2fprod-common-totd-6.9.1.jar"/>
+	    </path>
+	
+	<!-- Akcja Czyszczenie -->
+    <target name="clean">
+    	<!--   <delete dir="${build.dir}"/>  -->
+    	<delete dir="${doc.dir}"/>
+    	<delete dir="${jar.dir}"/>
+    </target>
+	
+	<!-- Tworzenie pustych folderow -->
+	 <target name="init" description="setup project directories">
+	 	<!--    <mkdir dir="${build.dir}"/> -->
+	    <mkdir dir="${doc.dir}"/>
+	 	<mkdir dir="${jar.dir}"/>
+	  </target>
+	
+	<!-- Tworzenie dokumentacji Javadoc -->
+		  <target name="doc" depends="init" description="generate documentation">
+		    <javadoc sourcepath="${source.dir}" destdir="${doc.dir}" classpathref="classpath"/>
+		  </target>
+
+	<!-- Kompilacja projektu -->
+    <target name="compile" depends="doc">
+        <mkdir dir="${classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${src.dir}" debug="false" destdir="${classes.dir}" classpathref="classpath"/>
+    </target>
+	
+	
+	<!-- Tworzenie pliku wykonywalnego aplikacji JAR-->
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        	<fileset dir="${classes.dir}" includes="**/*.class" />
+        	 <fileset dir="resources" />
+        	    <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+        </jar>
+    </target>
+
+	<!-- Uruchomienie pliku JAR -->
+    <target name="run" depends="jar">
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true" >
+        	 <classpath>
+        	            <path refid="classpath"/>
+        	            <path location="${jar.dir}/${ant.project.name}.jar"/>
+        	 </classpath>
+        </java>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="clean,run"/>
+
+</project>
